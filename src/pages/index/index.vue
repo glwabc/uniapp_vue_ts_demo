@@ -56,8 +56,8 @@ export default {
       pictures: [
         {
           id: '1',
-          // url: 'https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/uploads/goods_preview_1.jpg',
-          url: '../../static/images/swiper-imgages/goods_preview_1.jpg',
+          url: 'https://pcapi-xiaotuxian-front-devtest.itheima.net/miniapp/uploads/goods_preview_1.jpg',
+          // url: '../../static/images/swiper-imgages/goods_preview_1.jpg',
         },
         {
           id: '2',
@@ -87,23 +87,65 @@ export default {
     onPreviewImage(url) {
       console.log(url)
 
-      // 大图预览
-      // map()方法遍历数组，返回处理后的新数组
-      // map() 方法返回一个新数组，数组中的元素为原始数组元素调用函数处理后的值。
-      // map() 方法按照原始数组元素顺序依次处理元素。
-      // 注意： map() 不会对空数组进行检测。
-      // 注意： map() 不会改变原始数组。
-      // 也就是对一个数组进行一定的处理并返回处理的结果。
-      // 写不写return 都会返回一个数组，需要一个值来接收这个数组。
-      // 某种程度上和foreach差不多，但是foreach不会返回。
       uni.previewImage({
         // 预览图片api
         // current 为当前显示图片的链接/索引值，不填或填写的值无效则为 urls 的第一张。
-        // 必填。不填会报错
+        // current为必填。不填会报错
+        // 多图预览，current，对应就是在循环图片数据的索引,urls: 是数组形式传入。因为uni.previewImage 要根据 current的索引，来动态匹配urls里面的数据
+        // 注意，当 urls 中有重复的图片链接时：
+        //    传链接，预览结果始终显示该链接在 urls 中第一次出现的位置。
+        //    传索引值，在微信/百度/抖音小程序平台，会过滤掉传入的 urls 中该索引值之前与其对应图片链接重复的值。其它平台会保留原始的 urls 不会做去重处理。
         current: url,
-        // 需要预览的图片链接列表，必填
         urls: this.pictures.map((v) => v.url),
+        // urls 需要预览的图片链接列表，必填
+        // 大图预览
+        // map()方法遍历数组，返回处理后的新数组
+        // map() 方法返回一个新数组，新数组中的元素为原始数组中的每个元素调用函数处理后得到的值。
+        // map() 方法按照原始数组元素顺序依次处理元素。
+        // 注意： map() 不会对空数组进行检测。
+        // 注意： map() 不会改变原始数组。
+        // map() 函数的作用是对数组中的每一个元素进行处理，返回新的元素。
+        // 也就是对一个数组进行一定的处理并返回处理的结果。
+        // 写不写return 都会返回一个数组，需要一个值来接收这个数组。
+        // 某种程度上和foreach差不多，但是foreach不会返回。
+        // 用法：
+        // array.map(function(item,index,arr){})
+        // item：必须。当前元素的的值。
+        // index：可选。当前元素的索引。
+        // arr：可选。当前元素属于的数组对象。
+        // 示例：
+        // const list = ["min","list","do","mo"]
+        // const pro = list.map((item,index,array)=>{
+        // 	// item 原数组的 每一个元素
+        // 	// index 原数组 下标
+        // 	// 当前元素属于 的数组对象
+        // 	return item + "1"   // 处理后可以返回一个新数组
+        // })
+        // console.log(pro)
+        // // 打印结果 (4) ["min1", "list1", "do1", "mo1"]
+        //
+        // let array = [1, 2, 3, 4, 5];
+        // let newArray = array.map((item) => {
+        //     return item * item;
+        // })
+        // console.log(newArray)  // [1, 4, 9, 16, 25]
       })
+      // 示例
+      // <view class="photosView">
+      // 	<block v-for="(item, index) in photos" :key="index">
+      // 		<view class="box"><image :src="item.src" mode="widthFix" @click="previewImage(index)"></image></view>
+      // 	</block>
+      // </view>
+      // ………………
+      // previewImage(index) {
+      // 	let photoList = this.photos.map(item => {
+      // 		return item.src;
+      // 	});
+      // 	uni.previewImage({
+      // 		current: index,
+      // 		urls: photoList
+      // 	});
+      // }
     },
   },
 }
